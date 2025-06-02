@@ -1,0 +1,486 @@
+
+1) Create a package for mathematical power like square, cube of given 
+number.  
+SQL> --Defining Package 
+Create OR Replace Package math_pow IS 
+Procedure cal_squ(n IN Number); 
+Function cal_cub(n Number) Return Number; 
+End math_pow; 
+/ --Creating Package 
+Create OR Replace Package Body math_pow IS 
+Procedure cal_squ(n IN Number) IS 
+Begin 
+dbms_output.put_line('Square of ' || n || ' is: ' || (n * n)); 
+End cal_squ; 
+Function cal_cub(n Number) Return Number IS 
+Begin 
+Return (n * n * n); 
+End cal_cub; 
+End math_pow; 
+/ --Calling Package 
+Declare 
+n Number; 
+squ Number; 
+Begin 
+n := &n; 
+math_pow.cal_squ(n); 
+squ := math_pow.cal_cub(n); 
+dbms_output.put_line('Cube of ' || n || ' is: ' || squ); 
+End; 
+/ 
+
+1 | S H P 
+Output:- 
+Enter value for n: 7 
+Square of 7 is: 49 
+Cube of 7 is: 343 
+2) Create package which contain procedure, function, and cursor for making 
+student marks sheet(use std ,marks table).  
+SQL> --Defining Package 
+Create OR Replace Package std_pkg IS 
+Cursor std_cur(n Number) Return std%ROWTYPE; 
+Procedure std_dis(n IN Number); 
+Function std_cal(n Number) Return Number; 
+End std_pkg; 
+/ --Creating Package 
+Create OR Replace Package Body std_pkg IS 
+Cursor std_cur(n Number) Return std%ROWTYPE IS  
+Select * from std Where Roll_No = n; 
+Procedure std_dis(n IN Number) IS 
+info std%ROWTYPE; 
+Begin 
+Open std_cur(n); 
+Loop 
+Fetch std_cur INTO info; 
+Exit When std_cur%NOTFOUND; 
+dbms_output.put_line('Roll No: ' || info.Roll_No); 
+dbms_output.put_line('Name: ' || info.name); 
+End Loop; 
+Close std_cur; 
+End std_dis; 
+Function std_cal(n Number) Return Number IS 
+m1 Number; 
+m2 Number; 
+m3 Number; 
+per Number; 
+Begin 
+Select sub1, sub2, sub3 into m1, m2, m3 from marks Where Roll_No = n; 
+per := (m1 + m2 + m3) / 3; 
+Return trunc(per, 2); 
+End std_cal; 
+End std_pkg; 
+/ 
+2 | S H P 
+--Calling Package 
+Declare 
+n Number; 
+per Number; 
+Begin 
+n := &n; 
+std_pkg.std_dis(n); 
+per := std_pkg.std_cal(n); 
+dbms_output.put_line('Percentage: ' || per); 
+End; 
+/ 
+Output:- 
+Enter value for n: 1 
+Roll No: 1 
+Name: abc 
+Percentage: 72.66 
+3) Create a package for private object.  
+SQL> --Defining Package 
+Create OR Replace Package priv_pkg IS 
+Procedure show; 
+End priv_pkg; 
+/ --Creating Package 
+Create OR Replace Package Body priv_pkg IS 
+Procedure disp IS 
+Begin 
+dbms_output.put_line('Private Object'); 
+End disp; 
+Procedure show IS 
+Begin 
+disp; 
+dbms_output.put_line('Public Object'); 
+End show; 
+End priv_pkg; 
+/ --Calling Package 
+exec priv_pkg.show; 
+Output:- 
+Private Object 
+Public Object 
+3 | S H P 
+4)Define cursor for display information of Employee.  
+SQL> 
+Declare 
+info emp%ROWTYPE; 
+eno Number; 
+Cursor disp_info(eno Number) IS  
+Select * from emp Where empno = eno; 
+Begin 
+eno := &eno; 
+Open disp_info(eno); 
+Loop 
+Fetch disp_info into info; 
+Exit When disp_info%NOTFOUND; 
+dbms_output.put_line('Emp No.: ' || info.empno); 
+dbms_output.put_line('Emp Name: ' || info.name); 
+dbms_output.put_line('Emp Salary: ' || info.salary); 
+End Loop; 
+Close disp_info; 
+End; 
+/ 
+Output:- 
+Enter value for eno: 1 
+Emp Name: ABC 
+Emp Salary: 20000 
+5)Define a cursor which can accept deptid as parameter and display 
+department name.  
+SQL> 
+Declare 
+info dept%ROWTYPE; 
+deptid Number; 
+Cursor disp_info(deptid Number) IS 
+Select * from dept Where Dept_Id = deptid; 
+Begin 
+deptid := &deptid; 
+Open disp_info(deptid); 
+Loop 
+Fetch disp_info into info; 
+Exit When disp_info%NOTFOUND; 
+dbms_output.put_line('Dept ID: ' || info.Dept_Id); 
+dbms_output.put_line('Dept Name: ' || info.Dept_Name); 
+End Loop; 
+End; 
+/ 
+4 | S H P 
+Output:- 
+Enter value for deptid: 10 
+Dept ID: 10 
+Dept Name: Accounting 
+6) Define a cursor within cursor which can show student information 
+(rollno,name,address,stream) and marks(3 subject marks,percentage).  
+SQL> 
+Declare 
+Cursor std_cur IS Select * from std; 
+Cursor mark_cur(no Number) IS Select * from marks Where Roll_No = no; 
+s std%ROWTYPE; 
+m marks%ROWTYPE; 
+Begin 
+Open std_cur; 
+Loop 
+Fetch std_cur into s; 
+Exit When std_cur%NOTFOUND; 
+dbms_output.put('Roll No.: ' || s.Roll_No || ', Name: ' || s.name); 
+For m in mark_cur(s.Roll_No) Loop 
+dbms_output.put(', Marks: ' || m.sub1 || ', ' || m.sub2 || ', ' || 
+m.sub3); 
+End Loop; 
+dbms_output.new_line; 
+End Loop; 
+Close std_cur; 
+End; 
+/ 
+Output:- 
+Roll No.: 1, Name: abc, Marks: 75, 78, 65 
+Roll No.: 2, Name: xyz, Marks: 85, 83, 87 
+7) Find employee Second highest salary of employee using cursor.  
+SQL> 
+Declare 
+Cursor emp_cur IS Select * from emp Where 
+Salary = (Select MAX(Salary) from emp Where 
+Salary < (Select MAX(Salary) from emp)); 
+e emp%ROWTYPE; 
+Begin 
+Open emp_cur; 
+Fetch emp_cur into e; 
+5 | S H P 
+dbms_output.put_line('Emp No: ' || e.empno || ', Name: ' || e.name || ', Salary: ' || 
+e.Salary); 
+End; 
+/ 
+Output:- 
+Emp No: 3, Name: PQR, Salary: 25000 
+8) Create trigger for avoiding inserting the records whose address 'solapur' and 
+deleting the records whose address 'satara'.(use emp table with address field).  
+SQL> 
+Create OR Replace Trigger chek_add 
+Before Insert OR Delete ON emp 
+For each row 
+Begin 
+If Inserting AND :New.Address = 'Solapur' Then 
+RAISE_APPLICATION_ERROR(-20001, 'Insert NOT Allowed for Solapur 
+Address.'); 
+Elsif Deleting AND :Old.Address = 'Satara' Then 
+RAISE_APPLICATION_ERROR(-20002, 'Delete NOT Allowed for Satara 
+Address.'); 
+End If; 
+End; 
+/ 
+Output:- 
+Error During Insertion, 
+SQL>  Insert into emp values(5, 30000, 'LMN', 'Solapur'); 
+Insert into emp values(5, 30000, 'LMN', 'Solapur') 
+* 
+ERROR at line 1: 
+ORA-20001: Insert NOT Allowed for Solapur Address. 
+ORA-06512: at "SYSTEM.CHEK_ADD", line 3 
+ORA-04088: error during execution of trigger 'SYSTEM.CHEK_ADD' 
+Error During Deletion, 
+SQL> Delete from emp Where Address = 'Satara'; 
+Delete from emp Where Address = 'Satara' 
+* 
+ERROR at line 1: 
+ORA-20002: Delete NOT Allowed for Satara Address. 
+ORA-06512: at "SYSTEM.CHEK_ADD", line 5 
+ORA-04088: error during execution of trigger 'SYSTEM.CHEK_ADD' 
+6 | S H P 
+9) Create Trigger which not allow to insert Negative employee number  
+SQL> 
+Create OR Replace Trigger chek_no 
+After Insert on emp 
+For each row 
+Begin 
+If (:New.EmpNo < 0) Then 
+RAISE_APPLICATION_ERROR(-20001, 'Insert NOT Allowed Negative 
+Employee Number.'); 
+End If; 
+End; 
+/ 
+Output:- 
+Error During Insertion, 
+SQL>  insert into emp values(-5, 40000, 'AZS', 'Sangli'); 
+insert into emp values(-5, 40000, 'AZS', 'Sangli') 
+* 
+ERROR at line 1: 
+ORA-20001: Insert NOT Allowed Negative Employee Number. 
+ORA-06512: at "SYSTEM.CHEK_NO", line 3 
+ORA-04088: error during execution of trigger 'SYSTEM.CHEK_NO' 
+10) Create a trigger which can store all DDL operation of databases.  
+SQL> 
+Create OR Replace Trigger chek_ddl 
+After DDL on DATABASE 
+Begin 
+Insert into ddl_log values(USER, SYSDATE, ORA_SYSEVENT); 
+End; 
+/ 
+Output:- 
+SQL> Create table ddl_log(User_Name Varchar2(15), Sys_Date Date, Event Varchar2(15)); 
+Table created. 
+SQL> Create table employee(Emp_Id Number, Emp_Name Varchar2(15)); 
+Table created. 
+SQL> Alter table employee add Address Varchar2(20); 
+Table altered. 
+SQL> Drop table employee; 
+Table dropped. 
+7 | S H P 
+SQL> Select * from ddl_log; 
+USER_NAME        ---------------   
+SYSTEM            
+SYSTEM            
+SYSTEM            
+SYS_DATE    ---------   
+23-MAR-25   
+23-MAR-25   
+23-MAR-25  
+EVENT --------------- 
+CREATE 
+ALTER 
+ DROP 
+11) Create a trigger audit for emp table  
+SQL> 
+Create OR Replace Trigger audit_emp 
+After Insert OR Delete OR Update on emp 
+For each row 
+Declare 
+action varchar2(15); 
+Begin 
+If Inserting Then 
+action := 'Insert'; 
+Elsif Deleting Then 
+action := 'Delete'; 
+Elsif Updating Then 
+action := 'Update'; 
+End If; 
+Insert into emp_audit values(USER, SYSDATE, action); 
+End; 
+/ 
+Output:- 
+SQL> Create table emp_audit(User_Name Varchar2(15), Sys_Date Date, Action Varchar2(15)); 
+Table created. 
+SQL> Insert into emp values(5, 40000, 'IJK', 'Sangli'); 
+1 row created. 
+SQL> Update emp Set Salary = 45000 Where EmpNo = 5; 
+1 row updated. 
+SQL> Delete from emp Where EmpNo = 5; 
+1 row deleted. 
+SQL> Select * from emp_audit; 
+USER_NAME        ---------------   
+SYSTEM            
+SYS_DATE   ACTION ---------  --------------- 
+23-MAR-25  Insert 
+SYSTEM            
+SYSTEM            
+23-MAR-25  Update 
+23-MAR-25  Delete 
+8 | S H P 
+12) Write a PL/SQL block which can handle zero_divide exception. 
+SQL> 
+Declare 
+a Number; 
+b Number; 
+c Number; 
+Begin 
+a := &a; 
+b := &b; 
+c := a / b; 
+Exception 
+When Zero_Divide Then 
+dbms_output.put_line('division by Zero NOT Allowed.'); 
+End; 
+/ 
+Output:- 
+Enter value for a: 5 
+Enter value for b: 0 
+division by Zero NOT Allowed. 
+13) Write a PL/SQL block which can accept emp id and show it's name. 
+If that emp id is NOT Exists then Give appropriate exceptions.  
+SQL> 
+Declare 
+no emp.empno%TYPE; 
+nm emp.name%TYPE; 
+Begin 
+no := &no; 
+Select Name into nm from emp Where EmpNo = no; 
+dbms_output.put_line('Employee Name: ' || nm); 
+Exception 
+When NO_DATA_FOUND Then 
+dbms_output.put_line('Employee NOT Found.'); 
+End; 
+/ 
+Output:- 
+Enter value for no: 6 
+Employee NOT Found. 
+9 | S H P 
+14) Write a PL/SQL block which can use raise_application_error();  
+SQL> 
+Declare 
+age Number; 
+Begin 
+age := &age; 
+If (age < 18) Then 
+RAISE_APPLICATION_ERROR(-20004, 'Age must be 18 or above.'); 
+Else 
+dbms_output.put_line('Eligible.'); 
+End If; 
+End; 
+/ 
+Output:- 
+Enter value for age: 17 
+Error During Checking, 
+Declare 
+* 
+ERROR at line 1: 
+ORA-20004: Age must be 18 or above. 
+ORA-06512: at line 7 
+15) Write a PL/SQL block which can use pragma exception. 
+SQL> 
+Declare 
+exp Exception; 
+Pragma Exception_init(exp, -20001); 
+n Number; 
+Begin 
+n := &n; 
+For i in 1..n Loop 
+dbms_output.put_line(i * i); 
+If (i = 6) Then 
+raise exp; 
+End If; 
+End Loop; 
+Exception 
+When exp Then 
+dbms_output.put_line('6 rounds completed.'); 
+End; 
+/ 
+Output:- 
+10 | S H P 
+Enter value for n: 10 
+1 
+4 
+9 
+16 
+25 
+36 
+6 rounds completed. 
+16) Write a PL/SQL block which can use defined exception. 
+SQL> 
+Declare 
+excp Exception; 
+mark Number; 
+Begin 
+mark := &mark; 
+If mark < 35 Then 
+Raise excp; 
+End If; 
+dbms_output.put_line('Pass.'); 
+Exception 
+When excp Then 
+dbms_output.put_line('Fail- Due to low mark.'); 
+End; 
+/ 
+Output:- 
+Enter value for mark: 32 
+Fail- Due to low mark. ------------------------------------------------------------------------------------------------------- 
+Note:- Only for understanding purpose.(Don't Write in Assignment.) 
+Syntax for Package:- 
+1. Package Specification(Defining):- 
+CREATE OR REPLACE PACKAGE Package_Name IS -- Cursor Declaration 
+CURSOR Cursor_Name(Var_Name Data_Type) RETURN Table_Name%ROWTYPE; -- Procedure Declaration 
+PROCEDURE Procedure_Name(Var_Name IN/OUT/IN OUT Data_Type); 
+11 | S H P 
+-- Function Declaration 
+FUNCTION Function_Name(Var_Name Data_Type) RETURN Data_Type; 
+END Package_Name; 
+/ 
+2. Package Body (Implementation):- 
+CREATE OR REPLACE PACKAGE BODY Package_Name IS -- Cursor Definition 
+CURSOR Cursor_Name(Var_Name Data_Type) RETURN Table_Name%ROWTYPE IS 
+SELECT * FROM Table_Name WHERE Col_Name = Var_Name; -- Procedure Implementation 
+PROCEDURE Procedure_Name(Var_Name IN/OUT/IN OUT Data_Type) IS 
+v_row Table_Name%ROWTYPE; 
+BEGIN 
+OPEN Cursor_Name(Var_Name); 
+LOOP 
+FETCH Cursor_Name INTO v_row; 
+EXIT WHEN Cursor_Name%NOTFOUND; 
+DBMS_OUTPUT.PUT_LINE(v_row.Col_Name1 || ' ' || v_row.Col_Name2); 
+END LOOP; 
+CLOSE Cursor_Name; 
+END Procedure_Name; -- Alternative way using FOR loop 
+/* 
+PROCEDURE Procedure_Name(Var_Name IN/OUT/IN OUT Data_Type) IS 
+BEGIN 
+FOR v_rec IN (SELECT * FROM Table_Name WHERE Col_Name = Var_Name) LOOP 
+DBMS_OUTPUT.PUT_LINE(v_rec.Col_Name1 || ' ' || v_rec.Col_Name2); 
+END LOOP; 
+END Procedure_Name; 
+*/ -- Function Implementation 
+FUNCTION Function_Name(Var_Name Data_Type) RETURN Data_Type IS 
+v_result Data_Type; 
+BEGIN 
+RETURN v_result; 
+END Function_Name; 
+END Package_Name; 
+/ 
+12 | S H P 
+3. Calling the Package:- 
+DECLARE 
+Var_Name Data_Type; 
+Var_Name1 Data_Type; 
+BEGIN -- Calling Procedure 
+Package_Name.Procedure_Name(Var_Name); -- Calling Function 
+Var_Name1 := Package_Name.Function_Name(Var_Name); -- Output 
+DBMS_OUTPUT.PUT_LINE(Var_Name1); 
+END; 
+/ -------------------------------------------------------------------------------------------- 
+13 | S H P 

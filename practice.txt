@@ -1,0 +1,17 @@
+DECLARE 
+    n1 number:=&n1;
+    n2 number:=&n2;
+    a number;
+    s number;
+    ch number:=&ch;
+begin
+    a:=n1+n2;
+    s:=n1-n2;
+
+    case ch
+        when ch:=1 then dbms_output.put_line('Result :'||a);
+        when ch:=2 then dbms_output.put_line('Result :'||s);
+
+    else 'Wrong input';
+   end;
+end;

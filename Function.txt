@@ -1,0 +1,44 @@
+//creating the package
+CREATE OR REPLACE PACKAGE student_package AS
+  PROCEDURE display_student_info(p_roll_number IN NUMBER);
+END student_package;
+
+//speciyfing the package
+
+CREATE OR REPLACE PACKAGE BODY student_package AS
+  FUNCTION calculate_grade(p_marks IN NUMBER) RETURN VARCHAR2 IS
+  BEGIN
+    IF p_marks >= 90 THEN
+      RETURN 'A';
+    ELSIF p_marks >= 80 THEN
+      RETURN 'B';
+    ELSIF p_marks >= 70 THEN
+      RETURN 'C';
+    ELSIF p_marks >= 60 THEN
+      RETURN 'D';
+    ELSE
+      RETURN 'F';
+    END IF;
+  END calculate_grade;
+
+  PROCEDURE display_student_info(p_roll_number IN NUMBER) AS
+    v_name VARCHAR2(255);
+    v_class VARCHAR2(255);
+    v_address VARCHAR2(255);
+    v_marks NUMBER;
+    v_grade VARCHAR2(1);
+  BEGIN
+    SELECT s.name, s.class, s.address, m.marks
+    INTO v_name, v_class, v_address, v_marks
+    FROM student s
+    JOIN marks m ON s.roll_number = m.roll_number
+    WHERE s.roll_number = p_roll_number;
+
+    v_grade := calculate_grade(v_marks);
+
+    DBMS_OUTPUT.PUT_LINE('Name: ' || v_name);
+    DBMS_OUTPUT.PUT_LINE('Class: ' || v_class);
+    DBMS_OUTPUT.PUT_LINE('Address: ' || v_address);
+    DBMS_OUTPUT.PUT_LINE('Grade: ' || v_grade);
+  END display_student_info;
+END student_package;

@@ -1,0 +1,31 @@
+DECLARE
+    n NUMBER;
+    t NUMBER;
+    r NUMBER;
+    s NUMBER := 0;
+    f NUMBER;
+BEGIN
+    -- Prompt user input
+    n := &Enter_Number;
+    t := n;
+
+    -- Loop through each digit of the number
+    WHILE n > 0 LOOP
+        r := MOD(n, 10);  -- Extract last digit
+        f := 1;
+
+         WHILE r > 0 Loop
+                f:=f*r;
+                r:=r-1;
+        end Loop;
+        s := s + f;
+        n := TRUNC(n / 10);  -- Remove last digit
+    END LOOP;
+
+    -- Check if strong number
+    IF s = t THEN
+        DBMS_OUTPUT.PUT_LINE(t || ' is a Strong number.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(t || ' is not a Strong number.');
+    END IF;
+end;

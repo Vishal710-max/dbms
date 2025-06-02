@@ -1,0 +1,56 @@
+A trigger in DBMS is a mechanism that automatically performs a defined action in response to specific changes in a database (such as INSERT, UPDATE, or DELETE). 
+Triggers can be defined to run before or after the event occurs, depending on the need.
+It helps maintain data integrity, automate tasks, and enforce business rules. 
+
+//given by Experts
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Salary DECIMAL(10, 2)
+);
+
+CREATE TABLE AuditLog (
+    LogID INT PRIMARY KEY AUTO_INCREMENT,
+    Action VARCHAR(50),
+    EmployeeID INT,
+    ChangeDate DATETIME
+);
+
+CREATE TRIGGER LogEmployeeUpdate
+AFTER UPDATE ON Employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO AuditLog (Action, EmployeeID, ChangeDate)
+    VALUES ('UPDATE', OLD.EmployeeID, NOW());
+END;
+
+//written by notebook
+
+// T1 :convert each entry in upper case
+create or replace trigger upper_case
+before insert on emp 
+for each row 
+begin
+    :new.name:=upper(:new.name);
+end;
+
+// T1 :can not delete the particular id from table 
+create or replace trigger del_dept 
+before  delete on dept 
+for each row
+begin
+    if :old.deptid =101 then
+    raise_application_error (-20001,'can not Delete the Recorde');
+    end if;
+end;
+
+// T1 :can not delete the particular id from table
+create or replace trigger update_dept
+before update of deptname on dept
+for each row
+begin
+    if :old.deptname:=new.deptname then 
+        raise.application_error(-2002'Name can not be changed');
+    end if;
+end;

@@ -1,0 +1,30 @@
+declare 
+    A number(6):=&A;
+    B number(6):=&B;
+    C number(7):=&C;
+begin 
+    if (A >B and A >C )then
+
+        dbms_output.put_line ('no1 is Greater');
+
+    elsif (B > A and B >C)then
+        
+        dbms_output.put_line ('2nd no is Greater:');
+    else
+        dbms_output.put_line ('3rd no. is Greater:');
+    end if;
+end;
+
+
+
+
+DECLARE
+    result BOOLEAN;
+BEGIN
+    result := is_prime_number(7);
+    if result then 
+        DBMS_OUTPUT.PUT_LINE('no. is prime :');
+    else 
+        DBMS_OUTPUT.PUT_LINE('no. is not prime :');
+    end if;
+END;

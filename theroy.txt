@@ -1,0 +1,78 @@
+Sure! Here’s an example of a procedure in PL/SQL with IN and OUT parameters, as well as an IN OUT parameter.
+
+1. IN parameter example
+
+An IN parameter is used to pass a value into the procedure.
+
+CREATE OR REPLACE PROCEDURE greet_user (p_name IN VARCHAR2) IS
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Hello, ' || p_name || '!');
+END;
+/
+
+Here, p_name is an IN parameter. When the procedure is called, you need to provide a value for p_name.
+
+For example:
+
+EXEC greet_user('Alice');
+
+This will output: Hello, Alice!
+
+
+2. OUT parameter example
+
+An OUT parameter is used to return a value from the procedure.
+
+CREATE OR REPLACE PROCEDURE get_employee_name (p_emp_id IN NUMBER, p_name OUT VARCHAR2) IS
+BEGIN
+    SELECT employee_name
+    INTO p_name
+    FROM employees
+    WHERE employee_id = p_emp_id;
+END;
+/
+
+Here, p_emp_id is an IN parameter (input), and p_name is an OUT parameter (output).
+
+For example:
+
+DECLARE
+    emp_name VARCHAR2(100);
+BEGIN
+    get_employee_name(101, emp_name);
+    DBMS_OUTPUT.PUT_LINE('Employee Name: ' || emp_name);
+END;
+
+This will output the employee name for the employee with ID 101.
+
+
+3. IN OUT parameter example
+
+An IN OUT parameter allows both input and output operations.
+
+CREATE OR REPLACE PROCEDURE update_salary (p_emp_id IN NUMBER, p_salary IN OUT NUMBER) IS
+BEGIN
+    -- Assume we are increasing the salary by 10%
+    p_salary := p_salary * 1.10;
+
+    UPDATE employees
+    SET salary = p_salary
+    WHERE employee_id = p_emp_id;
+END;
+/
+
+Here, p_emp_id is an IN parameter, and p_salary is an IN OUT parameter. You can pass in an initial salary value and then modify it within the procedure.
+
+For example:
+
+DECLARE
+    new_salary NUMBER := 5000;
+BEGIN
+    update_salary(101, new_salary);
+    DBMS_OUTPUT.PUT_LINE('Updated Salary: ' || new_salary);
+END;
+
+This will update the salary by 10% and output the new salary.
+
+
+Let me know if you need more details!

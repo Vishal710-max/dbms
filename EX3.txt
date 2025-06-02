@@ -1,0 +1,164 @@
+//armstrong 
+
+CREATE OR REPLACE PROCEDURE check_armstrong_number(n IN NUMBER) IS
+    t NUMBER := n;
+    r NUMBER;
+    s NUMBER := 0;
+    num number:=n;
+BEGIN
+    -- Loop to calculate the sum of cubes of digits
+    WHILE num > 0 LOOP
+        r := MOD(num, 10); -- Extract the last digit
+        s := s + (r * r * r); -- Add the cube of the digit to sum
+        num := TRUNC(num / 10); -- Remove the last digit
+    END LOOP;
+
+    -- Check if the sum of cubes is equal to the original number
+    IF s = t THEN
+        DBMS_OUTPUT.PUT_LINE('True');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('False');
+    END IF;
+END check_armstrong_number;
+
+
+//
+
+CREATE OR REPLACE FUNCTION is_armstrong_number(n IN NUMBER) RETURN BOOLEAN IS
+    t NUMBER;
+    r NUMBER;
+    s NUMBER := 0;
+BEGIN
+    t:=n;
+    -- Loop to calculate the sum of cubes of digits
+    WHILE n > 0 LOOP
+        r := MOD(n, 10); -- Extract the last digit
+        s := s + (r * r * r); -- Add the cube of the digit to sum
+        n := FLOOR(n / 10); -- Remove the last digit
+    END LOOP;
+
+    -- Check if the sum of cubes is equal to the original number
+    IF s = t THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END is_armstrong_number;
+
+
+//prime no 
+
+CREATE OR REPLACE PROCEDURE check_prime_number(n IN NUMBER) IS
+    i NUMBER := 1;
+    k NUMBER := 0;
+BEGIN
+    -- Loop to check divisibility from 1 to n
+    WHILE i <= n LOOP
+        IF MOD(n, i) = 0 THEN
+            k := k + 1;  -- Count the divisors
+        END IF;
+        i := i + 1;
+    END LOOP;
+
+    -- Check if the number has exactly two divisors (1 and the number itself)
+    IF k = 2 THEN
+        DBMS_OUTPUT.PUT_LINE(n || ' is a prime number.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(n || ' is not a prime number.');
+    END IF;
+END check_prime_number;
+
+
+//
+
+CREATE OR REPLACE FUNCTION is_prime_number(n IN NUMBER) RETURN BOOLEAN IS
+    i NUMBER := 1;
+    k NUMBER := 0;
+BEGIN
+    -- Loop to check divisibility from 1 to n
+    WHILE i <= n LOOP
+        IF MOD(n, i) = 0 THEN
+            k := k + 1;  -- Count the divisors
+        END IF;
+        i := i + 1;
+    END LOOP;
+
+    -- Return TRUE if the number has exactly two divisors
+    IF k = 2 THEN
+        RETURN TRUE;
+    ELSE
+        RETURN FALSE;
+    END IF;
+END is_prime_number;
+
+
+//Factorial 
+
+CREATE OR REPLACE PROCEDURE calculate_factorial(n IN NUMBER) IS
+    f NUMBER := 1;
+    i NUMBER;
+BEGIN
+    -- Loop to calculate the factorial in reverse order (n * (n-1) * ... * 1)
+    FOR i IN REVERSE 1..n LOOP
+        f := f * i;
+    END LOOP;
+
+    -- Output the factorial value
+    DBMS_OUTPUT.PUT_LINE('Factorial of ' || n || ' is ' || f);
+END calculate_factorial;
+
+
+//
+
+CREATE OR REPLACE FUNCTION factorial(n IN NUMBER) RETURN NUMBER IS
+    f NUMBER := 1;
+    i NUMBER;
+BEGIN
+    -- Loop to calculate the factorial in reverse order (n * (n-1) * ... * 1)
+    FOR i IN REVERSE 1..n LOOP
+        f := f * i;
+    END LOOP;
+
+    -- Return the calculated factorial
+    RETURN f;
+END factorial;
+
+
+
+//perfect no
+
+CREATE OR REPLACE PROCEDURE check_perfect_number(n IN NUMBER) IS
+    sum_divisors NUMBER := 0;
+BEGIN
+    FOR i IN 1 .. n - 1 LOOP
+        IF MOD(n, i) = 0 THEN
+            sum_divisors := sum_divisors + i;
+        END IF;
+    END LOOP;
+
+    IF sum_divisors = n THEN
+        DBMS_OUTPUT.PUT_LINE(n || ' is a perfect number.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(n || ' is not a perfect number.');
+    END IF;
+END;
+
+
+//
+
+CREATE OR REPLACE FUNCTION is_perfect_number(n IN NUMBER) RETURN VARCHAR2 IS
+    sum_divisors NUMBER := 0;
+BEGIN
+    FOR i IN 1 .. n - 1 LOOP
+        IF MOD(n, i) = 0 THEN
+            sum_divisors := sum_divisors + i;
+        END IF;
+    END LOOP;
+
+    IF sum_divisors = n THEN
+        RETURN 'YES';
+    ELSE
+        RETURN 'NO';
+    END IF;
+END;
+/

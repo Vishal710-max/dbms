@@ -1,0 +1,59 @@
+Q 1:create one package which can display student grade by taking it's personal info like
+name,rollno,Address,class and marks after giving roll no as input we get it's Grade .
+
+note :this package can applay on two table First is student and Second is marks .
+
+create or replace package mypack
+as
+    procedure student_detail (roll in number);
+end;
+
+create or replace package body mypack
+as
+    function cal (roll in number,n out varchar2,a out varchar2,c out varchar2,m out number)
+    return varchar2
+as
+grade varchar2 (5);
+begin 
+    select s.name,s.address,s.class,m.marks into n,a,c,m from student s join marks m on s.rollno=m.rollno where s.rollno=roll;
+    if m >90 then
+        grade:='A';
+
+    elsif m >80 then    
+        grade:='B';
+
+    elsif m >70 then    
+        grade:='C';
+
+    elsif m >60 then    
+        grade:='D';
+
+    else    
+        grade:='Fail';
+
+    end if;
+    return grade;
+end cal;
+
+procedure student_detail (roll in number)
+as
+    n varchar2(10);
+    a varchar2(10);
+    c varchar2(10);
+    m number;
+    grade varchar2(5);
+begin
+    grade:=cal(roll,n,a,c,m);
+    dbms_output.put_line('student Roll no :'||roll);
+    dbms_output.put_line('student Name :'||n);
+    dbms_output.put_line('student Address :'||a);
+    dbms_output.put_line('student Marks :'||m);
+    dbms_output.put_line('student Grade :'||grade);
+end student_detail;
+end mypack;
+
+declare
+    n number:=&n;
+begin
+    mypack.student_detail(n);
+end;

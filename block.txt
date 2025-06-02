@@ -1,0 +1,25 @@
+
+CREATE OR REPLACE PROCEDURE calculate_gross_salary(
+  p_id IN NUMBER,
+  p_name OUT VARCHAR2,
+  p_gross_salary OUT NUMBER
+)
+AS
+  v_basic_salary NUMBER;
+BEGIN
+  SELECT name, salary
+  INTO p_name, v_basic_salary
+  FROM emp
+  WHERE id = p_id;
+  
+  p_gross_salary := v_basic_salary * 1.2;   
+END;
+
+DECLARE
+  v_name VARCHAR2(50);
+  v_gross_salary NUMBER;
+BEGIN
+  calculate_gross_salary(1, v_name, v_gross_salary);
+  DBMS_OUTPUT.PUT_LINE('Name: ' || v_name);
+  DBMS_OUTPUT.PUT_LINE('Gross Salary: ' || v_gross_salary);
+END;

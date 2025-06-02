@@ -1,0 +1,304 @@
+//1:armstrong
+
+DECLARE
+    n NUMBER;
+    t NUMBER;
+    r NUMBER;
+    s NUMBER := 0;
+BEGIN
+    -- Input value
+    n := &Enter_Number;
+    t := n;
+
+    -- Check if Armstrong number
+    WHILE n > 0 LOOP
+        r := MOD(n, 10);
+        s := s + POWER(r, 3);
+        n := TRUNC(n / 10);
+    END LOOP;
+
+    -- Output result
+    IF s = t THEN
+        DBMS_OUTPUT.PUT_LINE('True');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('False');
+    END IF;
+END;
+/
+
+//2:Factorial
+
+DECLARE
+    n NUMBER;
+    f NUMBER := 1;
+    i NUMBER;
+BEGIN
+    -- Input from user
+    n := &Enter_Number;
+
+    -- Loop to calculate factorial
+    FOR i IN REVERSE 1..n LOOP
+        f := f * i;
+    END LOOP;
+
+    -- Output result
+    DBMS_OUTPUT.PUT_LINE('Factorial of given number: ' || f);
+END;
+/
+
+3:Fibonacci series
+
+DECLARE
+    n NUMBER;
+    a NUMBER := 0;
+    b NUMBER := 1;
+    c NUMBER;
+    i NUMBER := 0;
+BEGIN
+    -- Input from user
+    n := &Enter_Number;
+
+    -- Output label
+    DBMS_OUTPUT.PUT_LINE('Fibonacci series up to ' || n || ' terms:');
+
+    -- Loop to generate Fibonacci series
+    WHILE i <= n LOOP
+        DBMS_OUTPUT.PUT(a || CHR(9)); -- CHR(9) is tab character
+        c := a + b;
+        a := b;
+        b := c;
+        i := i + 1;
+    END LOOP;
+END;
+/
+
+4:Perfect no
+
+DECLARE
+    n NUMBER;
+    s NUMBER := 0;
+    i NUMBER := 1;
+BEGIN
+    -- Prompt for user input
+    n := &Enter_Number;
+
+    -- Calculate sum of divisors
+    WHILE i < n LOOP
+        IF MOD(n, i) = 0 THEN
+            s := s + i;
+        END IF;
+        i := i + 1;
+    END LOOP;
+
+    -- Check for perfect number
+    IF s = n THEN
+        DBMS_OUTPUT.PUT_LINE(n || ' is a perfect number.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(n || ' is not a perfect number.');
+    END IF;
+END;
+/
+
+5:prime no
+
+DECLARE
+    n NUMBER;
+    i NUMBER := 1;
+    k NUMBER := 0;
+BEGIN
+    -- Prompt for input
+    n := &Enter_Number;
+
+    -- Count number of divisors
+    WHILE i <= n LOOP
+        IF MOD(n, i) = 0 THEN
+            k := k + 1;
+        END IF;
+        i := i + 1;
+    END LOOP;
+
+
+6:Reverse
+
+DECLARE
+    n NUMBER;
+    t NUMBER;
+    r NUMBER;
+    s NUMBER := 0;
+BEGIN
+    -- Prompt user input
+    n := &Enter_Number;
+    t := n;
+
+    -- Reverse the number
+    WHILE n > 0 LOOP
+        r := MOD(n, 10);
+        s := s * 10 + r;
+        n := TRUNC(n / 10);
+    END LOOP;
+
+    -- Output the reversed number
+    DBMS_OUTPUT.PUT_LINE('Reversed number: ' || s);
+END;
+/
+
+
+7:strong no
+
+DECLARE
+    n NUMBER;
+    t NUMBER;
+    r NUMBER;
+    s NUMBER := 0;
+    f NUMBER;
+BEGIN
+    -- Prompt user input
+    n := &Enter_Number;
+    t := n;
+
+    -- Loop through each digit of the number
+    WHILE n > 0 LOOP
+        r := MOD(n, 10);  -- Extract last digit
+        f := 1;
+
+        -- Compute factorial of the digit
+        FOR i IN 1..r LOOP
+            f := f * i;
+        END LOOP;
+
+        s := s + f;
+        n := TRUNC(n / 10);  -- Remove last digit
+    END LOOP;
+
+    -- Check if strong number
+    IF s = t THEN
+        DBMS_OUTPUT.PUT_LINE(t || ' is a Strong number.');
+    ELSE
+        DBMS_OUTPUT.PUT_LINE(t || ' is not a Strong number.');
+    END IF;
+END;
+/
+
+8:palindrome no
+
+DECLARE
+    n NUMBER;
+    t NUMBER;
+    r NUMBER;
+    s NUMBER := 0;
+BEGIN
+    -- Prompt user for input
+    n := &Enter_Number;
+    t := n;
+
+    -- Reverse the number
+    WHILE n > 0 LOOP
+        r := MOD(n, 10);
+        s := s * 10 + r;
+        n := TRUNC(n / 10);
+    END LOOP;
+
+    -- Check for palindrome
+    IF s = t THEN
+        DBMS_OUTPUT.PUT_LINE('True');  -- It's a palindrome
+    ELSE
+        DBMS_OUTPUT.PUT_LINE('False'); -- Not a palindrome
+    END IF;
+END;
+/
+
+9:UP-TO Armstrong
+
+DECLARE
+    t NUMBER;
+    r NUMBER;
+    s NUMBER;
+    c NUMBER := 0;
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Armstrong numbers between 1 and 500:');
+
+    FOR i IN 1..500 LOOP
+        t := i;
+        s := 0;
+
+        -- Calculate sum of cubes of digits
+        WHILE t > 0 LOOP
+            r := MOD(t, 10);
+            s := s + POWER(r, 3);
+            t := TRUNC(t / 10);
+        END LOOP;
+
+        -- Check if Armstrong number
+        IF s = i THEN
+            DBMS_OUTPUT.PUT_LINE(i);
+            c := c + 1;
+        END IF;
+    END LOOP;
+
+    DBMS_OUTPUT.PUT_LINE('Total number of Armstrong numbers between 1 and 500: ' || c);
+END;
+/
+
+10:UP-TO palindrome
+
+DECLARE
+    t NUMBER;
+    r NUMBER;
+    s NUMBER;
+    c NUMBER := 0;
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Palindrome numbers between 1 and 500:');
+
+    -- Loop through numbers from 1 to 500
+    FOR i IN 1..500 LOOP
+        t := i;
+        s := 0;
+
+        -- Reverse the digits of the number
+        WHILE t > 0 LOOP
+            r := MOD(t, 10);  -- Get the last digit
+            s := s * 10 + r;  -- Build the reversed number
+            t := TRUNC(t / 10);  -- Remove the last digit
+        END LOOP;
+
+        -- Check if the number is a palindrome
+        IF s = i THEN
+            DBMS_OUTPUT.PUT_LINE(i);  -- Output the palindrome number
+            c := c + 1;  -- Increment the count
+        END IF;
+    END LOOP;
+
+    -- Output the total count of palindromes
+    DBMS_OUTPUT.PUT_LINE('Total palindrome numbers between 1 and 500: ' || c);
+END;
+/
+
+//
+
+DECLARE
+    n NUMBER;
+    i NUMBER;
+    j NUMBER;
+    is_prime BOOLEAN;
+BEGIN
+    -- Loop through numbers from 2 to 100
+    FOR n IN 2..100 LOOP
+        is_prime := TRUE;  -- Assume n is prime
+
+        -- Check for divisibility by any number from 2 to sqrt(n)
+        FOR i IN 2..TRUNC(SQRT(n)) LOOP
+            IF MOD(n, i) = 0 THEN
+                is_prime := FALSE;  -- n is not prime if divisible by i
+                EXIT;  -- Exit loop if n is not prime
+            END IF;
+        END LOOP;
+
+        -- If n is prime, print the number
+        IF is_prime THEN
+            DBMS_OUTPUT.PUT_LINE(n);
+        END IF;
+    END LOOP;
+END;
+/
+
+

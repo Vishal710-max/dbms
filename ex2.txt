@@ -1,0 +1,115 @@
+//1:
+
+1
+1 2
+1 2 3
+1 2 3 4
+1 2 3 4 5
+
+
+BEGIN
+    FOR i IN 1..5 LOOP
+        FOR j IN 1..i LOOP
+            DBMS_OUTPUT.PUT(j || ' ');
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE('');
+    END LOOP;
+END;
+/
+
+//2:
+
+* 
+* * 
+* * * 
+* * * * 
+* * * * * 
+
+
+BEGIN
+    FOR i IN 1..5 LOOP
+        FOR j IN 1..i LOOP
+            DBMS_OUTPUT.PUT('* ');
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE('');
+    END LOOP;
+END;
+/
+
+//3:
+
+1 
+2 2 
+3 3 3 
+4 4 4 4 
+5 5 5 5 5 
+
+BEGIN
+    FOR i IN 1..5 LOOP
+        FOR j IN 1..i LOOP
+            DBMS_OUTPUT.PUT(i || ' ');
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE('');
+    END LOOP;
+END;
+/
+
+
+//4:
+
+1 2 3 4 5 
+1 2 3 4 
+1 2 3 
+1 2 
+1 
+
+BEGIN
+    FOR i IN REVERSE 1..5 LOOP
+        FOR j IN 1..i LOOP
+            DBMS_OUTPUT.PUT(j || ' ');
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE('');
+    END LOOP;
+END;
+/
+
+
+//5:
+
+1 1 1 1 1 
+2 2 2 2 
+3 3 3 
+4 4 
+5 
+
+
+BEGIN
+    FOR i IN 1..5 LOOP
+        FOR j IN REVERSE i..5 LOOP
+            DBMS_OUTPUT.PUT(i || ' ');
+        END LOOP;
+        DBMS_OUTPUT.PUT_LINE('');
+    END LOOP;
+END;
+/
+
+//6
+
+a b c d e
+a b c d
+a b c
+a b
+a
+
+
+DECLARE
+    i NUMBER;
+    j NUMBER;
+BEGIN
+    FOR i IN REVERSE 1..5 LOOP
+        FOR j IN 1..i LOOP
+            DBMS_OUTPUT.PUT(CHR(96 + j) || ' ');
+        END LOOP;
+        DBMS_OUTPUT.NEW_LINE;
+    END LOOP;
+END;

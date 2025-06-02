@@ -1,0 +1,48 @@
+# 1: Ex of IN parameter 
+ 
+create or replace procedure emp_det (i in number)
+as
+begin 
+    dbms_output.put_line ('Emp id is :'||i);
+end emp_det;
+
+calling the given procedure we use these 3 steps 
+1:EXEC ()
+2:call ()
+3:block //if given procedure can contains the out parameters then we use
+ 
+# 2: Ex of IN and OUT parameter 
+
+create or replace procedure emp_det (i in number,n out varchar2)
+as
+begin 
+    select name into n from emp where id=i;
+end emp_det;
+
+declare
+    i  number;
+    n1 varchar2(20);
+begin 
+    i:=&i;
+    emp_det (i,n1);
+    dbms_output.put_line ('emp id is :'||i);
+    dbms_output.put_line ('emp name is :'||n1);
+end;
+
+# 3: Ex of IN OUT parameter 
+create or replace procedure update_salary (i in number,s out number)
+as
+begin
+    s:=s*0.01;
+    update emp set salary=s where id=i;
+end;
+
+declare 
+    i number;
+    sal number;
+begin
+    update_salary (i,sal);
+    select id,salary into i,sal from emp where id=&i;
+    dbms_output.put_line ('emp id is :'||i);
+    dbms_output.put_line ('updated salary is :'||sal);
+end;
